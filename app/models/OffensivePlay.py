@@ -7,7 +7,10 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.db.base_class import Base
 
 
-class OffensivePlay(Base):
+class offensive_play(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
-    playType = Column(String, nullable=False)
-    playId = Column(Integer, primary_key=True)
+    play_type = Column(String, nullable=False)
+    pass_play_id = Column(UUID(as_uuid=True), ForeignKey("pass_play.id"))
+    pass_play = relationship(
+        "pass_play", foreign_keys=pass_play_id, back_populates="offensive_play"
+    )
