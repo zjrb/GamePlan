@@ -121,18 +121,27 @@ def add_run_play(form: record_run):
 def get_most_successful_play() -> play:
     db = SessionLocal()
     # find play id from pass_play table
-    play = (
+    ply = (
         db.query(offensive_play_result)
         .filter(offensive_play_result.touchdown == True)
         .first()
     )
 
-    if not play:
+    if not ply:
         # get the play with the most yards
-        play = (
+        ply = (
             db.query(offensive_play_result)
             .order_by(offensive_play_result.yards.desc())
             .first()
         )
+    if ply.pass_play_id:
+        ply = db.query(pass_play).filter(pass_play.id == ply.pass_play_id).first()
+        fmn = db.query(formation).filter(formation.id == ply.formation_id).first()
+    else:
+        ply = db.query(run_play).filter(run_play.id == ply.run_play_id).first() 
+        fmn = db.query(formation).filter(formation.id == ply.formation_id).first()
 
-    return {"play": play}
+    response = play(play_name=ply.play_name, formation_name=fmn.formation_name)
+    
+
+    return response
