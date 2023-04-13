@@ -10,4 +10,4 @@ class pass_play(Base):
         UUID(as_uuid=True), ForeignKey("formation.id"), nullable=False
     )
     play_name = Column(String, nullable=False)
-    formation = relationship("formation", back_populates="pass_play")
+    offensive_play_results = relationship("offensive_play_result", backref="pass_play")

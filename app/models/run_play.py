@@ -2,7 +2,6 @@ import uuid
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, UUID
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
-from .formation import formation
 
 
 class run_play(Base):
@@ -11,4 +10,4 @@ class run_play(Base):
         UUID(as_uuid=True), ForeignKey("formation.id"), nullable=False
     )
     play_name = Column(String, nullable=False)
-    formation = relationship("formation", back_populates="run_play")
+    offensive_play_results = relationship("offensive_play_result", backref="run_play")

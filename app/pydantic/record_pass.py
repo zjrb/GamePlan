@@ -5,14 +5,14 @@ from pydantic import BaseModel
 
 class record_pass(BaseModel):
     play_name: str
-    caught: int
+    caught: bool
     yards: int
     ball_carrier: str
     yac: int
     down: int
     distance: int
     touchdown: bool
-    first_down: int
+    first_down: bool
     coverage: str
     blitz: bool
     hash: str

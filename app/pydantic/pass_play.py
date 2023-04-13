@@ -4,5 +4,5 @@ from pydantic import BaseModel
 
 
 class pass_play(BaseModel):
-    formation_id: UUID
+    formation_name: str
     play_name: str

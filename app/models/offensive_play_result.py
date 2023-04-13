@@ -24,5 +24,3 @@ class offensive_play_result(Base):
     defensive_personnel = Column(String, nullable=True)
     hash = Column(String, nullable=True)
     notes = Column(String, nullable=True)
-    pass_play = relationship("pass_play", back_populates="offensive_play_results")
-    run_play = relationship("run_play", back_populates="offensive_play_results")

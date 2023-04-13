@@ -7,6 +7,7 @@ from app.models.offensive_play_result import offensive_play_result
 from app.models.pass_play import pass_play
 from app.models.run_play import run_play
 from app.pydantic.record_run import record_run
+from app.pydantic.pass_play import pass_play as play
 
 offense = APIRouter()
 
@@ -21,6 +22,50 @@ def add_play(form: formation_pydantic):
 
 
 @offense.post("/add_pass_play")
+def add_play(form: play):
+    db = SessionLocal()
+    # find formation id from formation table
+    fmt = (
+        db.query(formation)
+        .filter(formation.formation_name == form.formation_name)
+        .first()
+    )
+    if not fmt:
+        return {"message": "formation not found"}
+    db.add(
+        pass_play(
+            formation_id=fmt.id,
+            play_name=form.play_name,
+        )
+    )
+    db.commit()
+    db.close()
+    return {"message": "success"}
+
+
+@offense.post("/add_run_play")
+def add_play(form: play):
+    db = SessionLocal()
+    # find formation id from formation table
+    fmtn = (
+        db.query(formation)
+        .filter(formation.formation_name == form.formation_name)
+        .first()
+    )
+    if not formation:
+        return {"message": "formation not found"}
+    db.add(
+        run_play(
+            formation_id=fmtn.id,
+            play_name=form.play_name,
+        )
+    )
+    db.commit()
+    db.close()
+    return {"message": "success"}
+
+
+@offense.post("/record_pass_play")
 def add_play(form: record_pass):
     db = SessionLocal()
     # find play id from pass_play table
@@ -48,7 +93,7 @@ def add_play(form: record_pass):
     return {"message": "success"}
 
 
-@offense.post("/add_run_play")
+@offense.post("/record_run_play")
 def add_run_play(form: record_run):
     db = SessionLocal()
     # find play id from pass_play table
@@ -70,3 +115,24 @@ def add_run_play(form: record_run):
     db.commit()
     db.close()
     return {"message": "success"}
+
+
+@offense.get("/get_most_successful_play")
+def get_most_successful_play() -> play:
+    db = SessionLocal()
+    # find play id from pass_play table
+    play = (
+        db.query(offensive_play_result)
+        .filter(offensive_play_result.touchdown == True)
+        .first()
+    )
+
+    if not play:
+        # get the play with the most yards
+        play = (
+            db.query(offensive_play_result)
+            .order_by(offensive_play_result.yards.desc())
+            .first()
+        )
+
+    return {"play": play}
