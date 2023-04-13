@@ -5,6 +5,8 @@ from app.pydantic.formation import formation as formation_pydantic
 from app.pydantic.record_pass import record_pass as record_pass
 from app.models.offensive_play_result import offensive_play_result
 from app.models.pass_play import pass_play
+from app.models.run_play import run_play
+from app.pydantic.record_run import record_run
 
 offense = APIRouter()
 
@@ -38,6 +40,30 @@ def add_play(form: record_pass):
             first_down=form.first_down,
             coverage=form.coverage,
             blitz=form.blitz,
+            hash=form.hash,
+        )
+    )
+    db.commit()
+    db.close()
+    return {"message": "success"}
+
+
+@offense.post("/add_run_play")
+def add_run_play(form: record_run):
+    db = SessionLocal()
+    # find play id from pass_play table
+    play = db.query(run_play).filter(run_play.play_name == form.play_name).first()
+    if not play:
+        return {"message": "play not found"}
+    db.add(
+        offensive_play_result(
+            run_play=play.id,
+            yards=form.yards,
+            ball_carrier=form.ball_carrier,
+            down=form.down,
+            distance=form.distance,
+            touchdown=form.touchdown,
+            first_down=form.first_down,
             hash=form.hash,
         )
     )
