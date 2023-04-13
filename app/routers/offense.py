@@ -74,7 +74,7 @@ def add_play(form: record_pass):
         return {"message": "play not found"}
     db.add(
         offensive_play_result(
-            pass_play=play.id,
+            pass_play_id=play.id,
             caught=form.caught,
             yards=form.yards,
             ball_carrier=form.ball_carrier,
@@ -102,7 +102,7 @@ def add_run_play(form: record_run):
         return {"message": "play not found"}
     db.add(
         offensive_play_result(
-            run_play=play.id,
+            run_play_id=play.id,
             yards=form.yards,
             ball_carrier=form.ball_carrier,
             down=form.down,
