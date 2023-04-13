@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class record_run(BaseModel):
+    formation_name: str
     play_name: str
     yards: int
     ball_carrier: str

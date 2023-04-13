@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class record_pass(BaseModel):
+    formation_name: str
     play_name: str
     caught: bool
     yards: int

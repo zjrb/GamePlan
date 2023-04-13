@@ -69,7 +69,9 @@ def add_play(form: play):
 def add_play(form: record_pass):
     db = SessionLocal()
     # find play id from pass_play table
-    play = db.query(pass_play).filter(pass_play.play_name == form.play_name).first()
+    formation_id = db.query(formation).filter(formation.formation_name == form.formation_name).first()
+
+    play = db.query(pass_play).filter(pass_play.play_name == form.play_name).filter(pass_play.formation_id == formation_id.id).first()
     if not play:
         return {"message": "play not found"}
     db.add(
@@ -96,8 +98,10 @@ def add_play(form: record_pass):
 @offense.post("/record_run_play")
 def add_run_play(form: record_run):
     db = SessionLocal()
+    formation_id = db.query(formation).filter(formation.formation_name == form.formation_name).first()
     # find play id from pass_play table
-    play = db.query(run_play).filter(run_play.play_name == form.play_name).first()
+    #filter by play name and formation id
+    play = db.query(run_play).filter(run_play.play_name == form.play_name).filter(run_play.formation_id == formation_id.id).first()
     if not play:
         return {"message": "play not found"}
     db.add(
